@@ -128,6 +128,20 @@ namespace OpenAI.Harmony
         public Dictionary<string, ToolNamespaceConfig>? Tools { get; set; }
         public static DeveloperContent New() => new();
         public DeveloperContent WithInstructions(string i) { Instructions = i; return this; }
+        public DeveloperContent WithFunctionTools(List<ToolDescription> tools)
+        {
+            if(Tools is null)
+                Tools = new Dictionary<string, ToolNamespaceConfig>();
+
+            string fName = "functions";
+
+            if (!Tools.ContainsKey(fName))
+                Tools.Remove(fName);
+
+            Tools.Add(fName, new ToolNamespaceConfig("functions", null, tools));
+
+            return this;
+        }
         public override Dictionary<string, object?> ToDictionary()
         {
             var dict = new Dictionary<string, object?>
