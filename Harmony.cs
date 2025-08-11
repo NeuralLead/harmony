@@ -95,6 +95,9 @@ namespace OpenAI.Harmony
         public static SystemContent New() => new();
         public SystemContent WithModelIdentity(string v) { ModelIdentity = v; return this; }
         public SystemContent WithReasoningEffort(ReasoningEffort val) { ReasoningEffort = val; return this; }
+        public SystemContent WithConversationStartDate(string conversationStartDate) { ConversationStartDate = conversationStartDate; return this; }
+        public SystemContent WithKnowledgeCutoff(string knowledgeCutoff) { KnowledgeCutoff = knowledgeCutoff; return this; }
+        public SystemContent WithRequiredChannels(List<string> channels) { ChannelConfig.RequireChannels(channels); return this; }
         public SystemContent WithTools(ToolNamespaceConfig nsCfg)
         {
             Tools ??= new();
@@ -203,6 +206,31 @@ namespace OpenAI.Harmony
         }
         public static Message FromRoleAndContent(Role role, object content) => FromAuthorAndContent(new Author(role), content);
         public static Message FromRoleAndContents(Role role, IEnumerable<Content> contents) => new() { Role = role, Name = null, Content = new(contents) };
+
+        public Message WithRecipient(string recipent)
+        {
+            Recipient = recipent;
+            return this;
+        }
+
+        public Message WithChannel(string channel)
+        {
+            Channel = channel;
+            return this;
+        }
+
+        public Message Clone()
+        {
+            return new Message()
+            {
+                Role = Role,
+                Name = Name,
+                Content = Content,
+                Channel = Channel,
+                ContentType = ContentType,
+                Recipient = Recipient,
+            };
+        }
     }
 
     public class Conversation
